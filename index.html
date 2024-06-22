@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Audio Frequency Analyzer">
+  <meta name="author" content="Your Name">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="audio, frequency analyzer, waveform, HTML, CSS, JavaScript">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Audio Frequency Analyzer">
+  <meta property="og:description" content="Audio Frequency Analyzer with HTML, CSS, and JavaScript">
+  <meta property="og:url" content="http://example.com">
+  <meta property="og:image" content="http://example.com/image.jpg">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="Audio Frequency Analyzer">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Audio Frequency Analyzer">
+  <meta name="twitter:description" content="Audio Frequency Analyzer with HTML, CSS, and JavaScript">
+  <meta name="twitter:url" content="http://example.com">
+  <meta name="twitter:image" content="http://example.com/image.jpg">
+  <meta name="twitter:site" content="@yoursite">
+  <meta name="twitter:creator" content="@yourname">
+
+  <!-- Favicon and Touch Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="http://example.com/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="http://example.com/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://example.com/favicon-16x16.png">
+
+  <title>Audio Frequency Analyzer</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Rubik', sans-serif;
+      background-color: #24292E;
+      color: #ffffff;
+    }
+    .navbar-main {
+      background-color: #1D2125;
+    }
+    .navbar-main .nav-link {
+      color: #ffffff;
+    }
+    .navbar-main .nav-link:hover {
+      color: #007bff;
+    }
+    .navbar-main .navbar-brand {
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+    }
+    .navbar-main .navbar-brand i {
+      margin-right: 10px;
+    }
+    .center-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .analyzer-container {
+      position: relative;
+      margin: 120px auto 20px; /* Adjusted margin to push it down */
+      width: 80%;
+      border: 5px solid white;
+      border-radius: 10px;
+    }
+    .analyzer-label {
+      position: absolute;
+      font-family: 'Fira Code', 'Source Code Pro', monospace;
+      color: #ffffff;
+      font-size: 14px; /* Adjusted font size */
+    }
+    .analyzer-label.y-label {
+      left: -35px; /* Adjusted left position for numbers */
+      text-align: right; /* Right justified */
+    }
+    .analyzer-label.x-label {
+      text-align: center;
+    }
+    .analyzer-label.top-label {
+      bottom: 520px;
+    }
+    .vertical-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      left: -70px; /* Adjusted left position for title */
+      font-size: 16px; /* Increased font size for titles */
+      font-weight: bold; /* Bold text for titles */
+    }
+    .x-axis-label {
+      position: absolute;
+      bottom: -40px;
+      width: 100%;
+      text-align: center;
+      font-family: 'Fira Code', 'Source Code Pro', monospace;
+      color: #ffffff;
+      font-size: 16px; /* Increased font size for titles */
+      font-weight: bold; /* Bold text for titles */
+    }
+    canvas {
+      display: block;
+      background-color: #000000;
+      margin: 0 auto;
+    }
+    #canvas {
+      width: 100%;
+      height: 500px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .controls button {
+      background-color: transparent;
+      border: none;
+      color: #ffffff;
+      margin: 0 10px;
+      cursor: pointer;
+      font-size: 1.5em;
+    }
+    .timeline {
+      width: 80%;
+      margin: 20px auto;
+    }
+    .grid-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .grid-line {
+      stroke: white;
+      stroke-width: 0.5;
+    }
+    .grid-line.major {
+      stroke-width: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-main">
+    <a class="navbar-brand" href="#"><i class="fas fa-record-vinyl"></i>KOHLYDE</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-link" href="#home">Home</a>
+        <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#music">Music</a>
+        <a class="nav-link" href="#sample-packs">Sample Packs</a>
+        <a class="nav-link" href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="center-content">
+    <h1>Audio Frequency Analyzer</h1>
+    <input type="file" id="audioFile" accept=".wav, .mp3, .flac">
+    <div class="controls">
+      <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+      <button id="stopBtn"><i class="fas fa-stop"></i></button>
+      <button id="rewindBtn"><i class="fas fa-backward"></i></button>
+      <button id="fastForwardBtn"><i class="fas fa-forward"></i></button>
+      <button id="nextTrackBtn"><i class="fas fa-step-forward"></i></button>
+    </div>
+    <input type="range" id="timeline" class="timeline" min="0" max="100" value="0">
+  </div>
+
+  <div class="analyzer-container">
+    <svg class="grid-container">
+      <!-- Vertical Grid Lines (Major and Minor) -->
+      <line x1="5%" y1="0" x2="5%" y2="100%" class="grid-line"></line>
+      <line x1="10%" y1="0" x2="10%" y2="100%" class="grid-line major"></line>
+      <line x1="15%" y1="0" x2="15%" y2="100%" class="grid-line"></line>
+      <line x1="20%" y1="0" x2="20%" y2="100%" class="grid-line major"></line>
+      <line x1="25%" y1="0" x2="25%" y2="100%" class="grid-line"></line>
+      <line x1="30%" y1="0" x2="30%" y2="100%" class="grid-line major"></line>
+      <line x1="35%" y1="0" x2="35%" y2="100%" class="grid-line"></line>
+      <line x1="40%" y1="0" x2="40%" y2="100%" class="grid-line major"></line>
+      <line x1="45%" y1="0" x2="45%" y2="100%" class="grid-line"></line>
+      <line x1="50%" y1="0" x2="50%" y2="100%" class="grid-line major"></line>
+      <line x1="55%" y1="0" x2="55%" y2="100%" class="grid-line"></line>
+      <line x1="60%" y1="0" x2="60%" y2="100%" class="grid-line major"></line>
+      <line x1="65%" y1="0" x2="65%" y2="100%" class="grid-line"></line>
+      <line x1="70%" y1="0" x2="70%" y2="100%" class="grid-line major"></line>
+      <line x1="75%" y1="0" x2="75%" y2="100%" class="grid-line"></line>
+      <line x1="80%" y1="0" x2="80%" y2="100%" class="grid-line major"></line>
+      <line x1="85%" y1="0" x2="85%" y2="100%" class="grid-line"></line>
+      <line x1="90%" y1="0" x2="90%" y2="100%" class="grid-line major"></line>
+      <line x1="95%" y1="0" x2="95%" y2="100%" class="grid-line"></line>
+
+      <!-- Horizontal Grid Lines (Major and Minor) -->
+      <line x1="0" y1="10%" x2="100%" y2="10%" class="grid-line"></line>
+      <line x1="0" y1="20%" x2="100%" y2="20%" class="grid-line major"></line>
+      <line x1="0" y1="30%" x2="100%" y2="30%" class="grid-line"></line>
+      <line x1="0" y1="40%" x2="100%" y2="40%" class="grid-line major"></line>
+      <line x1="0" y1="50%" x2="100%" y2="50%" class="grid-line"></line>
+      <line x1="0" y1="60%" x2="100%" y2="60%" class="grid-line major"></line>
+      <line x1="0" y1="70%" x2="100%" y2="70%" class="grid-line"></line>
+      <line x1="0" y1="80%" x2="100%" y2="80%" class="grid-line major"></line>
+      <line x1="0" y1="90%" x2="100%" y2="90%" class="grid-line"></line>
+    </svg>
+
+    <canvas id="canvas"></canvas>
+
+    <!-- Frequency Labels (Top and Bottom) -->
+    <div class="analyzer-label x-label top-label" style="left: 0;">0 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 10%;">100 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 20%;">200 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 30%;">300 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 40%;">400 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 50%;">500 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 60%;">600 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 70%;">700 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 80%;">800 Hz</div>
+    <div class="analyzer-label x-label top-label" style="left: 90%;">900 Hz</div>
+
+    <div class="analyzer-label x-label" style="left: 0;">0 Hz</div>
+    <div class="analyzer-label x-label" style="left: 10%;">100 Hz</div>
+    <div class="analyzer-label x-label" style="left: 20%;">200 Hz</div>
+    <div class="analyzer-label x-label" style="left: 30%;">300 Hz</div>
+    <div class="analyzer-label x-label" style="left: 40%;">400 Hz</div>
+    <div class="analyzer-label x-label" style="left: 50%;">500 Hz</div>
+    <div class="analyzer-label x-label" style="left: 60%;">600 Hz</div>
+    <div class="analyzer-label x-label" style="left: 70%;">700 Hz</div>
+    <div class="analyzer-label x-label" style="left: 80%;">800 Hz</div>
+    <div class="analyzer-label x-label" style="left: 90%;">900 Hz</div>
+
+    <!-- Amplitude Labels (Left and Right) -->
+    <div class="analyzer-label y-label" style="top: 0;">100%</div>
+    <div class="analyzer-label y-label" style="top: 10%;">90%</div>
+    <div class="analyzer-label y-label" style="top: 20%;">80%</div>
+    <div class="analyzer-label y-label" style="top: 30%;">70%</div>
+    <div class="analyzer-label y-label" style="top: 40%;">60%</div>
+    <div class="analyzer-label y-label" style="top: 50%;">50%</div>
+    <div class="analyzer-label y-label" style="top: 60%;">40%</div>
+    <div class="analyzer-label y-label" style="top: 70%;">30%</div>
+    <div class="analyzer-label y-label" style="top: 80%;">20%</div>
+    <div class="analyzer-label y-label" style="top: 90%;">10%</div>
+    <div class="analyzer-label y-label" style="top: 100%;">0%</div>
+
+    <div class="analyzer-label y-label" style="right: -35px; top: 0;">100%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 10%;">90%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 20%;">80%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 30%;">70%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 40%;">60%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 50%;">50%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 60%;">40%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 70%;">30%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 80%;">20%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 90%;">10%</div>
+    <div class="analyzer-label y-label" style="right: -35px; top: 100%;">0%</div>
+
+    <div class="vertical-text" style="position: absolute; top: 50%; transform: translateY(-50%);">AMPLITUDE</div>
+    <div class="x-axis-label">FREQUENCY</div>
+  </div>
+
+  <script>
+    let audioContext;
+    let source;
+    let analyser;
+    let dataArray;
+    let bufferLength;
+    let audioBuffer;
+    let isPlaying = false;
+    let startTime = 0;
+    let pausedAt = 0;
+
+    const canvas = document.getElementById('canvas');
+    const canvasCtx = canvas.getContext('2d');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const rewindBtn = document.getElementById('rewindBtn');
+    const fastForwardBtn = document.getElementById('fastForwardBtn');
+    const nextTrackBtn = document.getElementById('nextTrackBtn');
+    const timeline = document.getElementById('timeline');
+
+    // Handle file upload
+    document.getElementById('audioFile').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            if (audioContext) {
+                audioContext.close();
+            }
+
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const fileReader = new FileReader();
+            
+            fileReader.onload = function() {
+                audioContext.decodeAudioData(fileReader.result, function(buffer) {
+                    audioBuffer = buffer;
+                    setupAudioNodes(buffer);
+                    drawFrequencyAnalyzer();
+                });
+            };
+
+            fileReader.readAsArrayBuffer(file);
+        }
+    });
+
+    function setupAudioNodes(buffer) {
+        source = audioContext.createBufferSource();
+        source.buffer = buffer;
+
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 2048;
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        
+        source.onended = () => {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        };
+    }
+
+    function drawFrequencyAnalyzer() {
+        requestAnimationFrame(drawFrequencyAnalyzer);
+
+        analyser.getByteFrequencyData(dataArray);
+
+        canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 2.5;
+        let barHeight;
+        let x = 0;
+
+        const pastelColors = [
+            '#F7CAC9', '#92A8D1', '#88B04B', '#F7786B', '#DE93B0', '#6B5B95', '#FF6F61', '#45B8AC', '#EFC050', '#5B9BD5'
+        ];
+
+        for (let i = 0; i < bufferLength; i++) {
+            barHeight = dataArray[i];
+
+            const color = pastelColors[i % pastelColors.length];
+
+            canvasCtx.fillStyle = color;
+            canvasCtx.fillRect(x, canvas.height - (barHeight / 2), barWidth, barHeight / 2);
+
+            x += barWidth + 1;
+        }
+    }
+
+    playPauseBtn.addEventListener('click', () => {
+        if (!isPlaying) {
+            setupAudioNodes(audioBuffer);
+            source.start(0, pausedAt);
+            startTime = audioContext.currentTime - pausedAt;
+            isPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            audioContext.suspend().then(() => {
+                pausedAt = audioContext.currentTime - startTime;
+                isPlaying = false;
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            });
+        }
+    });
+
+    stopBtn.addEventListener('click', () => {
+        if (source) {
+            source.stop();
+            isPlaying = false;
+            pausedAt = 0;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+    });
+
+    rewindBtn.addEventListener('click', () => {
+        if (audioContext) {
+            audioContext.currentTime -= 10;
+        }
+    });
+
+    fastForwardBtn.addEventListener('click', () => {
+        if (audioContext) {
+            audioContext.currentTime += 10;
+        }
+    });
+
+    nextTrackBtn.addEventListener('click', () => {
+        // Implement the logic for next track
+    });
+
+    timeline.addEventListener('input', () => {
+        if (audioBuffer) {
+            const seekTime = (timeline.value / 100) * audioBuffer.duration;
+            if (isPlaying) {
+                source.stop();
+                setupAudioNodes(audioBuffer);
+                source.start(0, seekTime);
+                startTime = audioContext.currentTime - seekTime;
+            }
+            pausedAt = seekTime;
+        }
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
